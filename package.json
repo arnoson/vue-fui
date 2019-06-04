@@ -1,7 +1,6 @@
 {
   "name": "vue-fui",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "vue-cli-service serve dev/main.js",
     "build": "vue-cli-service build",
