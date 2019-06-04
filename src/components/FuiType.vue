@@ -1,6 +1,5 @@
 <script>
-import Vue from 'vue'
-import { upperFirst, parseDataPath, getDataPath, setDataPath } from '@/utils'
+import { parseDataPath, getDataPath, setDataPath } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 
 export default {
@@ -12,7 +11,7 @@ export default {
     }
   },
 
-  inject: ['schemaParent'],
+  inject: ['schemaParent', 'windows'],
 
   computed: {
     type() {

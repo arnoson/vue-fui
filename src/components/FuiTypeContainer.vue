@@ -15,7 +15,6 @@
 <script>
 import { isFunction } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
-import registry from '@/componentRegistry'
 
 export default {
   mixins: [fuiMixin],
@@ -35,8 +34,11 @@ export default {
           ? component()
           : component
       } else if (type) {
-        return this.collection.types[type]
-        // return registry.getTypeComponent(type)
+        const component = this.collection.types[type]
+        if (!component) {
+          console.warn(`No component found for type '${type}'`)
+        }
+        return component
       }
     }
   }

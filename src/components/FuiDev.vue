@@ -6,33 +6,38 @@
       )
         span {{ name }}
         span {{ value }}
-    FuiForm(
+    Fui(
+      :collection="collection"
       :data="data"
       :schema="schema"
       :defaults="defaults"
-      :collection="collection"
     )
 </template>
 
 <script>
-import FuiForm from './FuiForm'
+import { Fui, FuiForm, FuiWindows } from '@'
 import collection from '@/collections/dense'
 
 const data = {
-  text: 'mhh',
-  hallo: 'welt'
+  hallo: 'welt',
+  wirklich: true,
+  color: '#ffffff'
 }
 
 const schema = {
   layout: 'comma-separated',
   components: {
-    text: {
-      type: 'text',
-      label: 'text:'
-    },
     hallo: {
       type: 'text',
       label: 'hallo:'
+    },
+    wirklich: {
+      type: 'checkbox',
+      label: 'wirklich?'
+    },
+    color: {
+      type: 'color',
+      label: 'background'
     }
   }
 }
@@ -51,12 +56,15 @@ export default {
       data,
       schema,
       defaults,
-      collection
+      collection,
+      windows: []
     }
   },
 
   components: {
-    FuiForm
+    Fui,
+    FuiForm,
+    FuiWindows
   }
 }
 </script>

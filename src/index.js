@@ -1,2 +1,5 @@
+export { default as Fui } from './components/Fui'
 export { default as FuiForm } from './components/FuiForm'
 export { default as FuiType } from './components/FuiType'
+export { default as FuiWindow } from './components/FuiWindow'
+export { default as FuiWindows } from './components/FuiWindows'

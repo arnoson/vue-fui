@@ -18,8 +18,15 @@ import FuiTypeContainer from './FuiTypeContainer'
 export default {
   mixins: [fuiMixin],
 
+  props: {
+    windows: Array
+  },
+
   provide() {
-    return { schemaParent: this }
+    return {
+      schemaParent: this,
+      windows: this.windows
+    }
   },
 
   components: {
