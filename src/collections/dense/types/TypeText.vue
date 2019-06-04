@@ -1,5 +1,5 @@
 <template lang="pug">
-  .fui-text
+  .type-text
     span.quotes(v-if="quotes") {{ quotes }}
     input(
       v-model="value"
@@ -31,9 +31,6 @@ export default {
 <style lang="scss" scoped>
 .type-text {
   input {
-    box-sizing: border-box;
-    border: none;
-    outline: none;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
