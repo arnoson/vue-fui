@@ -1,9 +1,10 @@
 {
   "name": "vue-fui",
   "version": "0.1.0",
+  "main": "./dist/vue-fui.common.js",
   "scripts": {
     "dev": "vue-cli-service serve dev/main.js",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name vue-fui ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
