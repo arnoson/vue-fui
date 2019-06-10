@@ -7,10 +7,12 @@
       v-bind="window"
       @focus="bringToFront(window)"
       :collection="collection"
+      :windows="windows"
     )
 </template>
 
 <script>
+import { isFunction } from '@/utils'
 import FuiWindow from '@/components/FuiWindow'
 
 export default {

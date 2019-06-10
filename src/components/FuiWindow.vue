@@ -27,9 +27,13 @@ export default {
   mixins: [fuiMixin, dragMixin],
 
   props: {
-    defaults: {
-      type: Object,
-      default: () => ({})
+    id: {
+      type: Number,
+      required: true
+    },
+    windows: {
+      type: Array,
+      required: true
     }
   },
 
@@ -76,13 +80,13 @@ export default {
       this.expanded = !this.expanded
     },
 
-    onMouseDown(event) {
+    onMouseDown() {
       this.startDrag(event)
       this.$emit('focus')
     },
 
-    onClickOutside(event) {
-
+    onClickOutside() {
+      this.closeWindow(this.id)
     }
   },
 }

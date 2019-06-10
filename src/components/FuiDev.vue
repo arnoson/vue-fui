@@ -16,7 +16,7 @@
 
 <script>
 import { Fui, FuiForm, FuiWindows } from '@'
-import collection from '@/collections/dense'
+const collection = {}
 
 const data = {
   hallo: 'welt',
