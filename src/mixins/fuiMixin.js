@@ -1,5 +1,3 @@
-let windowId = 0
-
 export default {
   props: {
     schema: {
@@ -23,16 +21,5 @@ export default {
       type: Object,
       default: () => ({})
     }
-  },
-
-  methods: {
-    openWindow(schema, data) {
-      this.windows.push({ id: windowId++, schema, data })
-    },
-
-    closeWindow(id) {
-      const { windows } = this
-      this.$delete(windows, windows.findIndex(el => el.id === id))
-    },
   }
 }

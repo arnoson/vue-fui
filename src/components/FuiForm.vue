@@ -1,7 +1,7 @@
 <template lang="pug">
   .fui-form(
     :class="`collection-${collection.name}`"
-    :data-layout="schema.layout"
+    :data-layout="layout"
   )
     FuiTypeContainer(
       v-for="(schema, dataPath) in schema.components"
@@ -18,19 +18,20 @@ import FuiTypeContainer from './FuiTypeContainer'
 export default {
   mixins: [fuiMixin],
 
-  props: {
-    windows: Array
-  },
-
   provide() {
     return {
-      schemaParent: this,
-      windows: this.windows
+      schemaParent: this
     }
   },
 
   components: {
     FuiTypeContainer
+  },
+
+  computed: {
+    layout() {
+      return this.schema.layout || 'table'
+    }
   }
 }
 </script>

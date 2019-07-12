@@ -9,16 +9,17 @@
       :schema="schema"
       :defaults="defaults"
       :collection="collection"
-      :windows="windows"
     )
 </template>
 
 <script>
+import vue from 'vue'
 import FuiForm from './FuiForm'
 import FuiWindows from './FuiWindows'
 import fuiMixin from '@/mixins/fuiMixin'
+import state from '@/state'
 
-export default {
+const Fui = {
   mixins: [fuiMixin],
 
   components: {
@@ -28,8 +29,17 @@ export default {
 
   data() {
     return {
-      windows: []
+      windows: state.windows
     }
   }
 }
+
+Fui.openWindow = (schema, data) => {
+  state.windows.push({ id: state.windowId++, schema, data })
+}
+Fui.closeWindow = id => {
+  vue.$delete(state.windows, state.windows.findIndex(el => el.id === id))
+}
+
+export default Fui
 </script>

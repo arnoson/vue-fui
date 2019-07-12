@@ -11,7 +11,7 @@ export default {
     }
   },
 
-  inject: ['schemaParent', 'windows'],
+  inject: ['schemaParent'],
 
   computed: {
     type() {
