@@ -3,7 +3,7 @@
     @mousedown="onMouseDown"
     :style="style"
     :data-id="id"
-    v-outside:click="outsideOptions"
+    v-outside:mouseup="outsideOptions"
   )
     .fui-title-bar(
       :class="{ dragging }"
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import Fui from '@/components/Fui'
 import { isNumber } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 import dragMixin from '@/mixins/dragMixin'
@@ -71,7 +72,7 @@ export default {
     outsideOptions() {
       return {
         enabled: this.schema.autoClose && !this.schema.locked,
-        callback: this.onClickOutside
+        callback: this.close
       }
     }
   },
@@ -90,8 +91,8 @@ export default {
       this.$emit('focus')
     },
 
-    onClickOutside() {
-      this.closeWindow(this.id)
+    close() {
+      Fui.closeWindow(this.id)
     }
   },
 }

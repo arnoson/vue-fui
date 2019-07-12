@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import vue from 'vue'
+import Vue from 'vue'
 import FuiForm from './FuiForm'
 import FuiWindows from './FuiWindows'
 import fuiMixin from '@/mixins/fuiMixin'
@@ -38,7 +38,7 @@ Fui.openWindow = (schema, data) => {
   state.windows.push({ id: state.windowId++, schema, data })
 }
 Fui.closeWindow = id => {
-  vue.$delete(state.windows, state.windows.findIndex(el => el.id === id))
+  Vue.delete(state.windows, state.windows.findIndex(el => el.id === id))
 }
 
 export default Fui
