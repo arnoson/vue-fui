@@ -33,7 +33,8 @@ export default {
     },
 
     events() {
-      return this.schema.events
+      // Allow 'on' as a shorter alias for 'events'.
+      return this.schema.events || this.schema.on
     },
 
     labelElement() {
