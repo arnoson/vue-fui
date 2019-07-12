@@ -2,10 +2,14 @@
   .fui-window(
     @mousedown="onMouseDown"
     :style="style"
-    :class="{ expanded, 'no-title': !schema.title }"
+    :data-id="id"
     v-outside:click="outsideOptions"
   )
-    .id {{ $attrs.id }}
+    .fui-title-bar(
+      :class="{ dragging }"
+      @mousedown="startDrag"
+    )
+      .fui-title {{ schema.title }}
     FuiForm(
       v-bind="{ schema, data }"
       v-if="expanded"
@@ -14,14 +18,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { isNumber } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 import dragMixin from '@/mixins/dragMixin'
 import FuiForm from './FuiForm'
 import outside from '@/directives/outside'
-
-Vue.directive('outside', outside)
 
 export default {
   mixins: [fuiMixin, dragMixin],
@@ -41,6 +42,10 @@ export default {
     FuiForm
   },
 
+  directives: {
+    outside
+  },
+
   provide() {
     return {
       schemaParent: this
@@ -57,7 +62,7 @@ export default {
     style() {
       const { width, height } = this.schema
       return {
-        ...this.relativePosition,
+        ...this.position,
         width: isNumber(width) ? width + 'px' : width,
         height: isNumber(height) ? height + 'px' : height
       }
@@ -72,7 +77,8 @@ export default {
   },
 
   created() {
-    this.expanded = this.schema.expanded
+    const { expanded } = this.schema
+    this.expanded = expanded === undefined || expanded
   },
 
   methods: {
@@ -81,7 +87,6 @@ export default {
     },
 
     onMouseDown() {
-      this.startDrag(event)
       this.$emit('focus')
     },
 
@@ -97,5 +102,9 @@ export default {
   position: absolute;
   border: 1px solid;
   background: white;
+
+  .fui-title-bar {
+    user-select: none;
+  }
 }
 </style>

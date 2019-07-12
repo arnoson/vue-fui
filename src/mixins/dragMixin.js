@@ -1,89 +1,133 @@
+function constrainPosition(position, size, constraint) {
+  if (position.x < 0) {
+    position.x = 0
+  } else if (position.x + size.width > constraint.width) {
+    position.x = constraint.width - size.width
+  }
+
+  if (position.y < 0) {
+    position.y = 0
+  } else if (position.y + size.height > constraint.height) {
+    position.y = constraint.height - size.height
+  }
+
+  return position
+}
+
+function getWindowSize() {
+  return {
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight
+  }
+}
+
 export default {
   data() {
     return {
       dragging: false,
-      position: { x: 0, y: 0 },
-      dragDelta: { x: 0, y: 0 },
-      windowSize: { width: 0, height: 0 },
-      size: { width: 0, height: 0 }
+      // The relative position of the element stored in factors from 0-1.
+      $_relativePosition: { x: 0, y: 0 },
+      $_dragDelta: { x: 0, y: 0 },
+      $_windowSize: { width: 0, height: 0 },
+      $_size: { width: 0, height: 0 }
     }
   },
 
   computed: {
-    relativePosition() {
-      const { position, windowSize } = this
+    $_absolutePosition() {
+      const { $_relativePosition, $_windowSize } = this.$data
       return {
-        top: position.y / windowSize.height * 100 + '%',
-        left: position.x / windowSize.width * 100 + '%',
+        x: $_relativePosition.x * $_windowSize.width,
+        y: $_relativePosition.y * $_windowSize.height
+      }
+    },
+
+    position() {
+      const { $_size, $_windowSize } = this.$data
+
+      // Make sure the element is fully inside the viewport.
+      const { x, y } = constrainPosition(
+        this.$_absolutePosition,
+        $_size,
+        $_windowSize
+      )
+
+      // Convert absolute px values to percentages.
+      return {
+        top: y / $_windowSize.height * 100 + '%',
+        left: x / $_windowSize.width * 100 + '%'
       }
     }
   },
 
+  mounted() {
+    window.addEventListener('resize', this.$_onResize)
+    this.$data.$_windowSize = getWindowSize()
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.$_onResize)
+  },
+
   methods: {
-    initDrag(event) {
+    /**
+     * Calculate all necessary data for dragging.
+     */
+    $_initDrag(event) {
       const bounds = this.$el.getBoundingClientRect()
-      this.position = {
-        x: bounds.x,
-        y: bounds.y
-      }
-      this.delta = {
+
+      this.$data.$_dragDelta = {
         x: event.x - bounds.x,
         y: event.y - bounds.y
       }
-      this.size = {
+
+      this.$data.$_size = {
         width: bounds.width,
         height: bounds.height
       }
-      const { documentElement } = document
-      this.windowSize = {
-        width: documentElement.clientWidth,
-        height: documentElement.clientHeight
-      }
-      window.addEventListener('mouseup', this.endDrag)
+
+      window.addEventListener('mouseup', this.$_endDrag)
       document.body.classList.add('dragging')
     },
 
+    /**
+     * Add the event listeners to detect a drag start. This method should be
+     * called in a mousedown event on the drag handler.
+     */
     startDrag() {
-      window.addEventListener('mousemove', this.drag)
+      window.addEventListener('mousemove', this.$_drag)
       window.addEventListener('mouseup', () => {
-        window.removeEventListener('mousemove', this.drag, { once: true })
+        window.removeEventListener('mousemove', this.$_drag, { once: true })
       })
     },
 
-    drag(event) {
+    /**
+     * Update the relative position and initialse the drag if necessary.
+     */
+    $_drag(event) {
       if (!this.dragging) {
         this.dragging = true
-        this.initDrag(event)
+        this.$_initDrag(event)
       }
 
-      const { delta } = this
-      this.position = this.constrainPosition({
-        x: event.x - delta.x,
-        y: event.y - delta.y
-      })
+      const { $_dragDelta, $_windowSize } = this.$data
+      this.$data.$_relativePosition = {
+        x: (event.x - $_dragDelta.x) / $_windowSize.width,
+        y: (event.y - $_dragDelta.y) / $_windowSize.height
+      }
     },
 
-    endDrag() {
-      window.removeEventListener('mouseup', this.endDrag)
-      document.body.classList.remove('dragging')
+    /**
+     * Clean up after a drag.
+     */
+    $_endDrag() {
       this.dragging = false
+      window.removeEventListener('mouseup', this.$_endDrag)
+      document.body.classList.remove('dragging')
     },
 
-    constrainPosition(position) {
-      const { size, windowSize } = this
-      if (position.x < 0) {
-        position.x = 0
-      } else if (position.x + size.width > windowSize.width) {
-        position.x = windowSize.width - size.width
-      }
-
-      if (position.y < 0) {
-        position.y = 0
-      } else if (position.y + size.height > windowSize.height) {
-        position.y = windowSize.height - size.height
-      }
-
-      return position
+    $_onResize() {
+      this.$data.$_windowSize = getWindowSize()
     }
   }
 }
