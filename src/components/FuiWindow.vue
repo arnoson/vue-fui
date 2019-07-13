@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Fui from '@/components/Fui'
+import windows from '@/windows'
 import { isNumber } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 import dragMixin from '@/mixins/dragMixin'
@@ -31,10 +31,6 @@ export default {
   props: {
     id: {
       type: Number,
-      required: true
-    },
-    windows: {
-      type: Array,
       required: true
     }
   },
@@ -92,7 +88,7 @@ export default {
     },
 
     close() {
-      Fui.closeWindow(this.id)
+      windows.close(this.id)
     }
   },
 }

@@ -3,15 +3,16 @@
     component(
       v-for="window in windows"
       :key="window.id"
-      :is="getWindowComponent(window.schema)"
+      :is="getWindowComponent(window)"
       v-bind="window"
-      @focus="bringToFront(window)"
+      @focus="focus(window)"
       :collection="collection"
       :windows="windows"
     )
 </template>
 
 <script>
+import windows from '@/windows'
 import { isFunction } from '@/utils'
 import FuiWindow from '@/components/FuiWindow'
 
@@ -29,7 +30,7 @@ export default {
   },
 
   methods: {
-    getWindowComponent(schema) {
+    getWindowComponent(window) {
       const { component, type } = schema
 
       if (component) {
@@ -39,7 +40,7 @@ export default {
       } else if (type) {
         const component = this.collection.windows[type]
         if (!component) {
-          console.warn(`No component found for window '${type}'`)
+          throw new Error(`No component found for window '${type}'`)
         }
         return component
       } else {
@@ -47,10 +48,8 @@ export default {
       }
     },
 
-    bringToFront(window) {
-      const { windows } = this
-      windows.splice(windows.indexOf(window), 1)
-      windows.push(window)
+    focus(window) {
+      windows.focus(window.id)
     }
   }
 }
