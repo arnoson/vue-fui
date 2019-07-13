@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { Fui, FuiForm, FuiWindows } from '@'
-const collection = {}
+import { Fui, windows } from '@'
+import collection from '@/collections/keep-it-real'
 
 const data = {
   hallo: 'welt',
@@ -28,16 +28,20 @@ const schema = {
   layout: 'comma-separated',
   components: {
     hallo: {
-      type: 'text',
-      label: 'hallo:'
+      label: 'hallo',
+      type: 'text'
     },
-    wirklich: {
-      type: 'checkbox',
-      label: 'wirklich?'
-    },
-    color: {
-      type: 'color',
-      label: 'background'
+    test: {
+      type: 'button',
+      caption: 'open',
+      on: {
+        click() {
+          windows.open({
+            title: 'ahaaa',
+            autoClose: 'true'
+          })
+        }
+      }
     }
   }
 }
@@ -51,20 +55,17 @@ const defaults = {
 }
 
 export default {
+  components: {
+    Fui
+  },
+
   data() {
     return {
       data,
       schema,
       defaults,
-      collection,
-      windows: []
+      collection
     }
-  },
-
-  components: {
-    Fui,
-    FuiForm,
-    FuiWindows
   }
 }
 </script>

@@ -1,6 +1,7 @@
 <template lang="pug">
   input.type-text(
-    v-model="value"
+    :value="value"
+    @input="$emit('input', $event.target.value)"
     v-on="events"
   )
 </template>

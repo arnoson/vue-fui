@@ -1,9 +1,10 @@
 <script>
-import { parseDataPath, getDataPath, setDataPath } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 
 export default {
   mixins: [fuiMixin],
+
+  props: ['value'],
 
   data() {
     return {
@@ -16,20 +17,6 @@ export default {
   computed: {
     type() {
       return this.schema.type
-    },
-
-    value: {
-      get() {
-        return getDataPath(this.data, this.parsedDataPath)
-      },
-
-      set(value) {
-        setDataPath(this.data, this.parsedDataPath, value)
-      }
-    },
-
-    parsedDataPath() {
-      return parseDataPath(this.dataPath)
     },
 
     events() {

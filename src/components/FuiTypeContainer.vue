@@ -9,10 +9,12 @@
       :is="getTypeComponent(schema)"
       :key="dataPath"
       v-bind="{ schema, data, dataPath }"
+      v-model="value"
     )
 </template>
 
 <script>
+import { parseDataPath, getDataPath, setDataPath } from '@/utils'
 import { isFunction } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 
@@ -20,9 +22,23 @@ export default {
   mixins: [fuiMixin],
 
   computed: {
+    value: {
+      get() {
+        return getDataPath(this.data, this.parsedDataPath)
+      },
+
+      set(value) {
+        setDataPath(this.data, this.parsedDataPath, value)
+      }
+    },
+
     labelElement() {
       return this.$refs.labelElement
-    }
+    },
+
+    parsedDataPath() {
+      return parseDataPath(this.dataPath)
+    },
   },
 
   methods: {
