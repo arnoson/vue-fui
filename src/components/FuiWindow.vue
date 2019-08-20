@@ -2,8 +2,7 @@
   .fui-window(
     @mousedown="onMouseDown"
     :style="style"
-    :data-id="id"
-    v-outside:mouseup="outsideOptions"
+    v-outside:mousedown="outsideOptions"
   )
     .fui-title-bar(
       :class="{ dragging }"
@@ -30,8 +29,7 @@ export default {
 
   props: {
     id: {
-      type: Number,
-      required: true
+      type: String
     }
   },
 
@@ -51,7 +49,8 @@ export default {
 
   data() {
     return {
-      expanded: null
+      expanded: null,
+      locked: false
     }
   },
 
@@ -67,15 +66,16 @@ export default {
 
     outsideOptions() {
       return {
-        enabled: this.schema.autoClose && !this.schema.locked,
+        enabled: this.schema.autoClose && !this.locked,
         callback: this.close
       }
     }
   },
 
   created() {
-    const { expanded } = this.schema
+    const { expanded, locked } = this.schema
     this.expanded = expanded === undefined || expanded
+    this.locked = locked
   },
 
   methods: {

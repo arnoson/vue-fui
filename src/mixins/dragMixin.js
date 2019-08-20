@@ -92,7 +92,7 @@ export default {
 
     /**
      * Add the event listeners to detect a drag start. This method should be
-     * called in a mousedown event on the drag handler.
+     * called in a mousedown event on the drag handle.
      */
     startDrag() {
       window.addEventListener('mousemove', this.$_drag)

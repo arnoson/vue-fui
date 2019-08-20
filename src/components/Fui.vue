@@ -1,5 +1,9 @@
 <template lang="pug">
   .fui
+    Component(
+      v-if="collection.component"
+      :is="collection.component"
+    )
     FuiWindows(
       :windows="windows"
       :collection="collection"
@@ -18,8 +22,16 @@ import FuiWindows from './FuiWindows'
 import fuiMixin from '@/mixins/fuiMixin'
 import windows from '@/windows'
 
+let fuiIndex = 0
+
 export default {
   mixins: [fuiMixin],
+
+  provide() {
+    return {
+      schemaParent: this
+    }
+  },
 
   components: {
     FuiWindows,
@@ -28,6 +40,7 @@ export default {
 
   data() {
     return {
+      id: `fui@${fuiIndex++}`,
       windows
     }
   }

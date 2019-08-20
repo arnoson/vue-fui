@@ -1,6 +1,6 @@
 <template lang="pug">
   button.type-button(
-    v-on="events"
+    v-on="options.on"
   ) {{ options.caption }}
 </template>
 

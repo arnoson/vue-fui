@@ -38,7 +38,13 @@ const schema = {
         click() {
           windows.open({
             title: 'ahaaa',
-            autoClose: 'true'
+            autoClose: 'true',
+            components: {
+              test: {
+                type: 'text',
+                label: 'uhu'
+              }
+            }
           })
         }
       }

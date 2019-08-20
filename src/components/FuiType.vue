@@ -4,7 +4,9 @@ import fuiMixin from '@/mixins/fuiMixin'
 export default {
   mixins: [fuiMixin],
 
-  props: ['value'],
+  props: {
+    value: null
+  },
 
   data() {
     return {
@@ -15,13 +17,25 @@ export default {
   inject: ['schemaParent'],
 
   computed: {
-    type() {
-      return this.schema.type
+    id() {
+      const { schemaParent, dataPath } = this
+      return schemaParent && schemaParent.id
+        ? `${schemaParent.id}/${dataPath}`
+        : dataPath
     },
 
-    events() {
-      // Allow 'on' as a shorter alias for 'events'.
-      return this.schema.events || this.schema.on
+    valueProxy: {
+      get() {
+        return this.value
+      },
+
+      set(value) {
+        this.$emit('input', value)
+      },
+    },
+
+    type() {
+      return this.schema.type
     },
 
     labelElement() {

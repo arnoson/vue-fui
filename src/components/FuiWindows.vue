@@ -3,7 +3,8 @@
     component(
       v-for="window in windows"
       :key="window.id"
-      :is="getWindowComponent(window)"
+      :is="getWindowComponent(window.schema)"
+      :id="`window@${window.id}`"
       v-bind="window"
       @focus="focus(window)"
       :collection="collection"
@@ -30,7 +31,7 @@ export default {
   },
 
   methods: {
-    getWindowComponent(window) {
+    getWindowComponent(schema) {
       const { component, type } = schema
 
       if (component) {
@@ -44,7 +45,7 @@ export default {
         }
         return component
       } else {
-        return FuiWindow
+        return this.collection.windows?.['window'] || FuiWindow
       }
     },
 

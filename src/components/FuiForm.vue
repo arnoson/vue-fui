@@ -18,12 +18,6 @@ import FuiTypeContainer from './FuiTypeContainer'
 export default {
   mixins: [fuiMixin],
 
-  provide() {
-    return {
-      schemaParent: this
-    }
-  },
-
   components: {
     FuiTypeContainer
   },

@@ -9,6 +9,7 @@
       :is="getTypeComponent(schema)"
       :key="dataPath"
       v-bind="{ schema, data, dataPath }"
+      v-on="schema.events || schema.on"
       v-model="value"
     )
 </template>
@@ -22,6 +23,13 @@ export default {
   mixins: [fuiMixin],
 
   computed: {
+    // id() {
+    //   const { schemaParent, dataPath } = this
+    //   return schemaParent
+    //     ? `${schemaParent.id}.${dataPath}`
+    //     : dataPath
+    // },
+
     value: {
       get() {
         return getDataPath(this.data, this.parsedDataPath)
