@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import windows from '@/windows'
+import windowManager from '@/windowManager'
 import { isNumber } from '@/utils'
 import fuiMixin from '@/mixins/fuiMixin'
 import dragMixin from '@/mixins/dragMixin'
@@ -43,7 +43,8 @@ export default {
 
   provide() {
     return {
-      schemaParent: this
+      schemaParent: this,
+      windowId: this.id
     }
   },
 
@@ -67,7 +68,7 @@ export default {
     outsideOptions() {
       return {
         enabled: this.schema.autoClose && !this.locked,
-        callback: this.close
+        callback: this.onMouseDownOutside
       }
     }
   },
@@ -87,8 +88,12 @@ export default {
       this.$emit('focus')
     },
 
+    onMouseDownOutside() {
+      this.close()
+    },
+
     close() {
-      windows.close(this.id)
+      windowManager.close(this.id)
     }
   },
 }

@@ -5,7 +5,7 @@
       :is="collection.component"
     )
     FuiWindows(
-      :windows="windows"
+      ref="windows"
       :collection="collection"
     )
     FuiForm(
@@ -20,7 +20,6 @@
 import FuiForm from './FuiForm'
 import FuiWindows from './FuiWindows'
 import fuiMixin from '@/mixins/fuiMixin'
-import windows from '@/windows'
 
 let fuiIndex = 0
 
@@ -40,8 +39,7 @@ export default {
 
   data() {
     return {
-      id: `fui@${fuiIndex++}`,
-      windows
+      id: `fui@${fuiIndex++}`
     }
   }
 }

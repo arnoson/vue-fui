@@ -7,6 +7,7 @@
         span {{ name }}
         span {{ value }}
     Fui(
+      ref="fui"
       :collection="collection"
       :data="data"
       :schema="schema"
@@ -15,41 +16,14 @@
 </template>
 
 <script>
-import { Fui, windows } from '@'
+import { Fui } from '@'
 import collection from '@/collections/keep-it-real'
+import windowManager from '@/windowManager'
 
 const data = {
   hallo: 'welt',
   wirklich: true,
   color: '#ffffff'
-}
-
-const schema = {
-  layout: 'comma-separated',
-  components: {
-    hallo: {
-      label: 'hallo',
-      type: 'text'
-    },
-    test: {
-      type: 'button',
-      caption: 'open',
-      on: {
-        click() {
-          windows.open({
-            title: 'ahaaa',
-            autoClose: 'true',
-            components: {
-              test: {
-                type: 'text',
-                label: 'uhu'
-              }
-            }
-          })
-        }
-      }
-    }
-  }
 }
 
 const defaults = {
@@ -68,9 +42,30 @@ export default {
   data() {
     return {
       data,
-      schema,
       defaults,
-      collection
+      collection,
+      schema: {
+        layout: 'comma-separated',
+        components: {
+          hallo: {
+            label: 'hallo',
+            type: 'text'
+          },
+          test: {
+            type: 'button',
+            caption: 'open',
+            on: {
+              click: () => {
+                windowManager.open({
+                  schema: {
+                    title: 'fuuu'
+                  }
+                })
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

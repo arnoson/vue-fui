@@ -1,4 +1,4 @@
-export { default as windows } from './windows'
+export { default as windowManager } from './windowManager'
 export { default as Fui } from './components/Fui'
 export { default as FuiForm } from './components/FuiForm'
 export { default as FuiType } from './components/FuiType'

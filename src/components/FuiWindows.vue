@@ -1,32 +1,40 @@
 <template lang="pug">
   .fui-windows
     component(
-      v-for="window in windows"
+      v-for="window in stackedWindows"
+      class="fui-window"
       :key="window.id"
       :is="getWindowComponent(window.schema)"
-      :id="`window@${window.id}`"
+      :id="window.id"
       v-bind="window"
       @focus="focus(window)"
       :collection="collection"
-      :windows="windows"
     )
 </template>
 
 <script>
-import windows from '@/windows'
 import { isFunction } from '@/utils'
 import FuiWindow from '@/components/FuiWindow'
+import windowManager from '@/windowManager'
 
 export default {
   props: {
-    windows: {
-      type: Array,
-      required: true
-    },
-
     collection: {
       type: Object,
       required: true
+    }
+  },
+
+  data() {
+    return {
+      windows: windowManager.windows,
+      stackingOrder: windowManager.stackingOrder
+    }
+  },
+
+  computed: {
+    stackedWindows() {
+      return this.stackingOrder.map(id => this.windows[id])
     }
   },
 
@@ -34,8 +42,10 @@ export default {
     getWindowComponent(schema) {
       const { component, type } = schema
 
+      let result = null
+
       if (component) {
-        return isFunction(component)
+        result = isFunction(component)
           ? component()
           : component
       } else if (type) {
@@ -43,14 +53,16 @@ export default {
         if (!component) {
           throw new Error(`No component found for window '${type}'`)
         }
-        return component
+        result = component
       } else {
-        return this.collection.windows?.['window'] || FuiWindow
+        result = this.collection.windows?.['window'] || FuiWindow
       }
+
+      return result
     },
 
     focus(window) {
-      windows.focus(window.id)
+      windowManager.focus(window.id)
     }
   }
 }
