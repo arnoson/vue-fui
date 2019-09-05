@@ -8,6 +8,8 @@
       :class="`collection-${collection.name}`"
       :is="getTypeComponent(schema)"
       :key="dataPath"
+      :id="typeId"
+      :data-id="typeId"
       v-bind="{ schema, data, dataPath }"
       v-on="schema.events || schema.on"
       v-model="value"
@@ -22,13 +24,15 @@ import fuiMixin from '@/mixins/fuiMixin'
 export default {
   mixins: [fuiMixin],
 
+  inject: ['schemaParent'],
+
   computed: {
-    // id() {
-    //   const { schemaParent, dataPath } = this
-    //   return schemaParent
-    //     ? `${schemaParent.id}.${dataPath}`
-    //     : dataPath
-    // },
+    typeId() {
+      const { schemaParent, dataPath } = this
+      return schemaParent && schemaParent.id
+        ? `${schemaParent.id}/${dataPath}`
+        : dataPath
+    },
 
     value: {
       get() {

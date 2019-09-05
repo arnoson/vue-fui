@@ -5,7 +5,8 @@ export default {
   mixins: [fuiMixin],
 
   props: {
-    value: null
+    value: null,
+    id: null
   },
 
   data() {
@@ -17,13 +18,6 @@ export default {
   inject: ['schemaParent'],
 
   computed: {
-    id() {
-      const { schemaParent, dataPath } = this
-      return schemaParent && schemaParent.id
-        ? `${schemaParent.id}/${dataPath}`
-        : dataPath
-    },
-
     valueProxy: {
       get() {
         return this.value
