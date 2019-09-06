@@ -61,6 +61,7 @@ export default {
   },
 
   mounted() {
+    this.startDragPoint = {}
     window.addEventListener('resize', this.$_onResize)
     this.$data.$_windowSize = getWindowSize()
   },
@@ -95,6 +96,7 @@ export default {
      * called in a mousedown event on the drag handle.
      */
     startDrag() {
+      this.startDragPoint = { x: event.x, y: event.y }
       window.addEventListener('mousemove', this.$_drag)
       window.addEventListener('mouseup', () => {
         window.removeEventListener('mousemove', this.$_drag, { once: true })
@@ -107,7 +109,7 @@ export default {
     $_drag(event) {
       if (!this.dragging) {
         this.dragging = true
-        this.$_initDrag(event)
+        this.$_initDrag(this.startDragPoint)
       }
 
       const { $_dragDelta, $_windowSize } = this.$data
