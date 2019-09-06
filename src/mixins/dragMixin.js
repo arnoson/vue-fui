@@ -25,30 +25,31 @@ export default {
   data() {
     return {
       dragging: false,
-      // The relative position of the element stored in factors from 0-1.
-      $_relativePosition: { x: 0, y: 0 },
+      // The relative position stored in factors from 0-1.
+      relativePosition: { x: 0, y: 0 },
+      size: { width: 0, height: 0 },
       $_dragDelta: { x: 0, y: 0 },
       $_windowSize: { width: 0, height: 0 },
-      $_size: { width: 0, height: 0 }
     }
   },
 
   computed: {
-    $_absolutePosition() {
-      const { $_relativePosition, $_windowSize } = this.$data
+    // The absolute position stored in px.
+    absolutePosition() {
+      const { relativePosition, $_windowSize } = this.$data
       return {
-        x: $_relativePosition.x * $_windowSize.width,
-        y: $_relativePosition.y * $_windowSize.height
+        x: relativePosition.x * $_windowSize.width,
+        y: relativePosition.y * $_windowSize.height
       }
     },
 
-    position() {
-      const { $_size, $_windowSize } = this.$data
+    positionCss() {
+      const { size, $_windowSize } = this.$data
 
       // Make sure the element is fully inside the viewport.
       const { x, y } = constrainPosition(
-        this.$_absolutePosition,
-        $_size,
+        this.absolutePosition,
+        size,
         $_windowSize
       )
 
@@ -64,6 +65,7 @@ export default {
     this.startDragPoint = {}
     window.addEventListener('resize', this.$_onResize)
     this.$data.$_windowSize = getWindowSize()
+    this.updateSize()
   },
 
   beforeDestroy() {
@@ -72,20 +74,40 @@ export default {
 
   methods: {
     /**
+     * Update the size. An optional bounds object can be passed, to avoid
+     * unnecessary calls of `getBoundingClientRect`.
+     * See `$_initDrag` method, where bounds is already available because it is
+     * used elsewhere in the method.
+     * @param  {DOMRect} bounds
+     */
+    updateSize(bounds) {
+      const { width, height } = bounds || this.$el.getBoundingClientRect()
+      this.size = { width, height }
+    },
+
+    /**
+     * Manually set an absolute position.
+     * @param {Object} position
+     */
+    setAbsolutePosition(position) {
+      const { $_windowSize } = this.$data
+      this.relativePosition = {
+        x: position.x / $_windowSize.width,
+        y: position.y / $_windowSize.height
+      }
+    },
+
+    /**
      * Calculate all necessary data for dragging.
      */
-    $_initDrag(event) {
+    $_initDrag(point) {
       const bounds = this.$el.getBoundingClientRect()
 
       this.$data.$_dragDelta = {
-        x: event.x - bounds.x,
-        y: event.y - bounds.y
+        x: point.x - bounds.x,
+        y: point.y - bounds.y
       }
-
-      this.$data.$_size = {
-        width: bounds.width,
-        height: bounds.height
-      }
+      this.updateSize(bounds)
 
       window.addEventListener('mouseup', this.$_endDrag)
       document.body.classList.add('dragging')
@@ -95,7 +117,7 @@ export default {
      * Add the event listeners to detect a drag start. This method should be
      * called in a mousedown event on the drag handle.
      */
-    startDrag() {
+    startDrag(event) {
       this.startDragPoint = { x: event.x, y: event.y }
       window.addEventListener('mousemove', this.$_drag)
       window.addEventListener('mouseup', () => {
@@ -113,7 +135,7 @@ export default {
       }
 
       const { $_dragDelta, $_windowSize } = this.$data
-      this.$data.$_relativePosition = {
+      this.relativePosition = {
         x: (event.x - $_dragDelta.x) / $_windowSize.width,
         y: (event.y - $_dragDelta.y) / $_windowSize.height
       }

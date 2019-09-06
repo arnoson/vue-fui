@@ -28,9 +28,8 @@ export default {
   mixins: [fuiMixin, dragMixin],
 
   props: {
-    id: {
-      type: String
-    }
+    id: String,
+    parent: String
   },
 
   components: {
@@ -59,7 +58,7 @@ export default {
     style() {
       const { width, height } = this.schema
       return {
-        ...this.position,
+        ...this.positionCss,
         width: isNumber(width) ? width + 'px' : width,
         height: isNumber(height) ? height + 'px' : height
       }
