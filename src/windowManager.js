@@ -11,6 +11,10 @@ export default {
   windows: state.windows,
   stackingOrder: state.stackingOrder,
 
+  get(id) {
+    return this.windows[id]
+  },
+
   open(options) {
     const id = options.id || `window@${windowIndex++}`
     if (!this.isOpen(id)) {
@@ -21,8 +25,31 @@ export default {
     return id
   },
 
+  setProperty(id, key, value) {
+    const window = this.get(id)
+    Vue.set(this.windows, id, { ...window, [key]: value })
+  },
+
   isOpen(id) {
     return state.windows[id]
+  },
+
+  isChildOf(childId, parentId) {
+    let isChild = false
+
+    let window = this.get(childId)
+    if (window.parent !== undefined) {
+      while (window) {
+        window = this.get(window.parent)
+        if (!window) {
+          break
+        } else if (window.id === parentId) {
+          isChild = true
+        }
+      }
+    }
+
+    return isChild
   },
 
   close(id) {
@@ -44,61 +71,3 @@ export default {
     }
   }
 }
-
-
-
-// import Vue from 'vue'
-// let windowIndex = 0
-
-// export default new Vue({
-//   methods: {
-//     open() {
-//       Vue.set(windows, windowIndex++, {
-//         id: 'arsch'
-//       })
-//       console.log(windows)
-//     }
-//   }
-// })
-
-// // export default new Vue({
-// //   data() {
-// //     return {
-// //       windows: {},
-// //       stackingOrder: []
-// //     }
-// //   },
-
-// //   methods: {
-// //     open(options) {
-// //       const id = options.id || `window@${windowIndex++}`
-// //       if (!this.isOpen(id)) {
-// //         this.$set(this.windows, id, { ...options, id })
-// //         this.stackingOrder.push(id)
-// //       }
-
-// //       return id
-// //     },
-
-// //     isOpen(id) {
-// //       return this.windows[id]
-// //     },
-
-// //     close(id) {
-// //       this.$delete(this.windows, id)
-// //       this.stackingOrder = this.stackingOrder.filter(el => el !== id)
-// //     },
-
-// //     focus(id) {
-// //       this.stackingOrder = this.stackingOrder.filter(el => el !== id)
-// //       this.stackingOrder.push(id)
-// //     },
-
-// //     hide(id) {
-// //       const window = this.windows[id]
-// //       if (window) {
-// //         window.show = false
-// //       }
-// //     }
-// //   }
-// // })
